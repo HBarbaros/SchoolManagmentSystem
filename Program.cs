@@ -1,11 +1,16 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 
 class Program
 {
     static void Main(string[] args)
     {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
 
-        DatabaseConnection dbConnection = new DatabaseConnection();
+        DatabaseConnection dbConnection = new DatabaseConnection(configuration);
 
         StudentRepo studentRepo = new StudentRepo(dbConnection);
         CourseRepo courseRepo = new CourseRepo(dbConnection);

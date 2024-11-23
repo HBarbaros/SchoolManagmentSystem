@@ -1,67 +1,78 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using Dapper;
 
-public class StudentRepo : DapperRepo<Student>
+public class StudentRepo
 {
-    public StudentRepo(DatabaseConnection databaseConnection) : base(databaseConnection) { }
+    private readonly DatabaseConnection _databaseConnection;
 
-    public IEnumerable<Student> GetAllStudents()
+    // Constructor: DatabaseConnection sınıfını alır.
+    public StudentRepo(DatabaseConnection databaseConnection)
     {
-        return GetAll("Students");
+        _databaseConnection = databaseConnection;
     }
 
+    // Yeni bir öğrenci ekler.
+    public void AddStudent(Student student)
+    {
+        using (var connection = _databaseConnection.CreateConnection())
+        {
+            string sql = "INSERT INTO Students (Name, BirthDate, HouseId) VALUES (@Name, @BirthDate, @HouseId)";
+            connection.Execute(sql, student);
+        }
+    }
+
+    // Tüm öğrencileri listeleyen sorgu.
+    public List<Student> GetAllStudents()
+    {
+        using (var connection = _databaseConnection.CreateConnection())
+        {
+            string sql = "SELECT * FROM Students";
+            return connection.Query<Student>(sql).AsList();
+        }
+    }
+
+    // Belirli bir öğrenci ID'sine göre öğrenci döndürür.
     public Student GetStudentById(int id)
     {
-        return GetById(id, "Students");
+        using (var connection = _databaseConnection.CreateConnection())
+        {
+            string sql = "SELECT * FROM Students WHERE Id = @Id";
+            return connection.QuerySingleOrDefault<Student>(sql, new { Id = id });
+        }
     }
 
-    public bool AddStudent(Student student)
+    // Bir öğrenciyi günceller.
+    public void UpdateStudent(Student student)
     {
-        string insertSql = "INSERT INTO Students (Name, BirthDate, HouseId) VALUES (@Name, @BirthDate, @HouseId )";
-        try
+        using (var connection = _databaseConnection.CreateConnection())
         {
-            Add(insertSql, student);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error adding student: {ex.Message}");
-            return false;
+            string sql = "UPDATE Students SET Name = @Name, BirthDate = @BirthDate, HouseId = @HouseId WHERE Id = @Id";
+            connection.Execute(sql, student);
         }
     }
 
-    public bool UpdateStudent(Student student)
-    {
-        string updateSql = "UPDATE Students SET Name = @Name, BirthDate = @BirthDate, HouseId = @HouseId, WHERE Id = @Id";
-        try
-        {
-            Update(updateSql, student);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error updating student: {ex.Message}");
-            return false;
-        }
-    }
-
+    // Bir öğrenciyi siler.
     public bool DeleteStudent(int id)
     {
-        try
+        using (var connection = _databaseConnection.CreateConnection())
         {
-            Delete(id, "Students");
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error deleting student: {ex.Message}");
-            return false;
+            string sql = "DELETE FROM Students WHERE Id = @Id";
+            int rowsAffected = connection.Execute(sql, new { Id = id });
+
+            // Etkilenen satır sayısına göre silme işleminin başarılı olup olmadığını döner.
+            return rowsAffected > 0;
         }
     }
 
-    public IEnumerable<Student> GetStudentsByHouse(int houseId)
+    public List<Student> GetStudentsByHouse(int houseId)
     {
-        return GetAllByCondition("Students", "HouseId = @HouseId", new { HouseId = houseId });
+        using (var connection = _databaseConnection.CreateConnection())
+        {
+            string sql = "SELECT * FROM Students WHERE HouseId = @HouseId";
+            return connection.Query<Student>(sql, new { HouseId = houseId }).AsList();
+        }
     }
+
 }

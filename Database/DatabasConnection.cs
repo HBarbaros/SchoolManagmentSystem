@@ -1,23 +1,26 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using Dapper;
+using Microsoft.Extensions.Configuration;
 
 public class DatabaseConnection
 {
-    private string connectionString = "Server=gondolin667.org;" +
-                                      "Database=yhstudent12_SchoolManagementSystem;" +
-                                      "User ID=yhstudent12;" +
-                                      "Password=FB9OTeDr3&2B;" +
-                                      "Encrypt=False;" +
-                                      "TrustServerCertificate=False;";
+    private readonly string _connectionString;
 
-    // Method to create and open a new connection
+    public DatabaseConnection(IConfiguration configuration)
+    {
+        _connectionString = configuration.GetSection("Database:ConnectionString").Value;
+
+        if (string.IsNullOrWhiteSpace(_connectionString))
+        {
+            throw new InvalidOperationException("Connection string cannot be null or empty.");
+        }
+    }
+
     public IDbConnection CreateConnection()
     {
-        var connection = new SqlConnection(connectionString);
+        var connection = new SqlConnection(_connectionString);
         connection.Open();
         return connection;
     }
-
 }
