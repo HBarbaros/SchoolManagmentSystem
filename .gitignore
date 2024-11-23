@@ -489,3 +489,6 @@ DatabaseConnection.cs
 # Config files
 appsettings.json
 appsettings.*.json
+
+# review.md
+review.md
