@@ -7,13 +7,11 @@ public class StudentRepo
 {
     private readonly DatabaseConnection _databaseConnection;
 
-    // Constructor: DatabaseConnection sınıfını alır.
     public StudentRepo(DatabaseConnection databaseConnection)
     {
         _databaseConnection = databaseConnection;
     }
 
-    // Yeni bir öğrenci ekler.
     public void AddStudent(Student student)
     {
         using (var connection = _databaseConnection.CreateConnection())
@@ -23,7 +21,6 @@ public class StudentRepo
         }
     }
 
-    // Tüm öğrencileri listeleyen sorgu.
     public List<Student> GetAllStudents()
     {
         using (var connection = _databaseConnection.CreateConnection())
@@ -33,7 +30,6 @@ public class StudentRepo
         }
     }
 
-    // Belirli bir öğrenci ID'sine göre öğrenci döndürür.
     public Student GetStudentById(int id)
     {
         using (var connection = _databaseConnection.CreateConnection())
@@ -43,7 +39,6 @@ public class StudentRepo
         }
     }
 
-    // Bir öğrenciyi günceller.
     public void UpdateStudent(Student student)
     {
         using (var connection = _databaseConnection.CreateConnection())
@@ -53,7 +48,6 @@ public class StudentRepo
         }
     }
 
-    // Bir öğrenciyi siler.
     public bool DeleteStudent(int id)
     {
         using (var connection = _databaseConnection.CreateConnection())
@@ -61,7 +55,6 @@ public class StudentRepo
             string sql = "DELETE FROM Students WHERE Id = @Id";
             int rowsAffected = connection.Execute(sql, new { Id = id });
 
-            // Etkilenen satır sayısına göre silme işleminin başarılı olup olmadığını döner.
             return rowsAffected > 0;
         }
     }

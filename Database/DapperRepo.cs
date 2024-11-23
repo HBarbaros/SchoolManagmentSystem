@@ -55,7 +55,6 @@ public abstract class DapperRepo<T>
         }
     }
 
-    // Retrieve all records with a WHERE condition
     public IEnumerable<T> GetAllByCondition(string tableName, string whereClause, object parameters)
     {
         using (var conn = _databaseConnection.CreateConnection())
@@ -65,7 +64,6 @@ public abstract class DapperRepo<T>
         }
     }
 
-    // Retrieve a scalar value
     public int GetScalar(string sql, object parameters)
     {
         using (IDbConnection conn = _databaseConnection.CreateConnection())
@@ -74,7 +72,6 @@ public abstract class DapperRepo<T>
         }
     }
 
-    // Execute bulk operations
     public void ExecuteBulk(string sql, IEnumerable<object> parameters)
     {
         using (IDbConnection conn = _databaseConnection.CreateConnection())

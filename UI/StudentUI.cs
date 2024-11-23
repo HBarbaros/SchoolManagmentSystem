@@ -4,27 +4,21 @@ public class StudentUI
 {
     private readonly StudentRepo _studentRepo;
 
-    // Constructor: StudentRepo bağımlılığı enjekte edilir.
     public StudentUI(StudentRepo studentRepo)
     {
         _studentRepo = studentRepo;
     }
 
-    // Yeni bir öğrenci ekler.
     public void AddStudent()
     {
         Console.WriteLine("=== Add New Student ===");
 
-        // Kullanıcıdan öğrenci adı al
         string name = GetValidName();
 
-        // Kullanıcıdan doğum tarihi al
         DateTime birthDate = GetValidBirthDate();
 
-        // Kullanıcıdan House ID al
         int houseId = GetValidHouseId();
 
-        // Yeni bir öğrenci oluştur
         var student = new Student
         {
             Name = name,
@@ -32,13 +26,11 @@ public class StudentUI
             HouseId = houseId
         };
 
-        // Repository üzerinden öğrenci ekle
         _studentRepo.AddStudent(student);
 
         Console.WriteLine("Student added successfully!");
     }
 
-    // Tüm öğrencileri listeler.
     public void ShowAllStudents()
     {
         Console.WriteLine("=== List of Students ===");
@@ -58,7 +50,6 @@ public class StudentUI
         }
     }
 
-    // Belirli bir öğrenciyi ID ile gösterir.
     public void ShowStudentById()
     {
         Console.WriteLine("=== Show Student by ID ===");
@@ -77,7 +68,6 @@ public class StudentUI
         }
     }
 
-    // Bir öğrenciyi günceller.
     public void UpdateStudent()
     {
         Console.WriteLine("=== Update Student ===");
@@ -117,7 +107,6 @@ public class StudentUI
         Console.WriteLine("Student updated successfully!");
     }
 
-    // Bir öğrenciyi siler.
     public void DeleteStudent()
     {
         Console.WriteLine("=== Delete Student ===");
@@ -136,8 +125,6 @@ public class StudentUI
         }
     }
 
-
-    // Belirli bir HouseId'ye göre öğrencileri görüntüler.
     public void ViewStudentsByHouse()
     {
         Console.WriteLine("=== View Students by House ===");
@@ -160,7 +147,6 @@ public class StudentUI
         }
     }
 
-    // Kullanıcıdan geçerli bir isim alır.
     private string GetValidName()
     {
         string name;
@@ -173,7 +159,6 @@ public class StudentUI
         return name;
     }
 
-    // Kullanıcıdan geçerli bir doğum tarihi alır.
     private DateTime GetValidBirthDate()
     {
         DateTime birthDate;
@@ -185,7 +170,6 @@ public class StudentUI
         return birthDate;
     }
 
-    // Kullanıcıdan geçerli bir House ID alır.
     private int GetValidHouseId()
     {
         int houseId;
@@ -197,7 +181,6 @@ public class StudentUI
         return houseId;
     }
 
-    // Kullanıcıdan geçerli bir öğrenci ID'si alır.
     private int GetValidStudentId()
     {
         int id;
@@ -209,7 +192,6 @@ public class StudentUI
         return id;
     }
 
-    // Girilen string'in sadece harflerden oluşup oluşmadığını kontrol eder.
     private bool IsAlphabetic(string input)
     {
         foreach (var c in input)
